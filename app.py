@@ -21,7 +21,7 @@ def scrape_weather_data(url):
 
 def post_data_to_website(url, data):
     # Replace 'your_endpoint_url' with the actual URL where you want to post the data
-    endpoint_url = "your_endpoint_url"
+    endpoint_url = "https://nicolelaine.github.io/temperature"
     payload = {"data": data}
 
     try:
@@ -39,4 +39,4 @@ if __name__ == "__main__":
 
     # If data is not found, don't post to the website
     if scraped_data != "Data not found.":
-        post_data_to_website("your_endpoint_url", scraped_data)
+        post_data_to_website("https://nicolelaine.github.io/temperature", scraped_data)
