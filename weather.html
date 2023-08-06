@@ -1,28 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Weather Data</title>
+    <title>Weather Data Form</title>
 </head>
 <body>
-    <h1>Current Temperature in Tucson, AZ:</h1>
-    <div id="temperature">Loading...</div>
+    <h1>Scrape Weather Data</h1>
+    <form id="weatherForm">
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" required>
+        <button type="submit">Get Weather Data</button>
+    </form>
+
+    <div id="result">
+        <!-- The scraped data will be displayed here -->
+    </div>
+
     <script>
-        function fetchTemperature() {
-            fetch('/get_temperature')  // This route should match the one defined in your Flask app.py
-                .then(response => response.json())
-                .then(data => {
-                    const temperatureElement = document.getElementById('temperature');
-                    temperatureElement.innerHTML = data.temperature;
-                })
-                .catch(error => {
-                    console.error('Error fetching temperature:', error);
-                    const temperatureElement = document.getElementById('temperature');
-                    temperatureElement.innerHTML = 'Data not found.';
-                });
+        // Function to send a POST request to the Python script
+        async function scrapeWeatherData(city) {
+            const response = await fetch('/scrape', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ city: city }),
+            });
+
+            if (response.ok) {
+                const data = await response.text();
+                document.getElementById('result').innerText = data;
+            } else {
+                document.getElementById('result').innerText = 'Failed to fetch data.';
+            }
         }
 
-        // Fetch the temperature every 5 seconds (adjust as needed)
-        setInterval(fetchTemperature, 5000);
+        // Handle form submission
+        document.getElementById('weatherForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const city = document.getElementById('city').value;
+            scrapeWeatherData(city);
+        });
     </script>
 </body>
 </html>
